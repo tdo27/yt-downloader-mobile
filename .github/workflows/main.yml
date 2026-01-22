@@ -11,7 +11,6 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
-          sudo docker image prune -a -f
 
       - name: Install dependencies
         run: |
@@ -23,8 +22,9 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Ștergem cache-ul specific p4a care poate cauza erori de compilare Kivy
-          rm -rf .buildozer/android/platform/build-armeabi-v7a_arm64-v8a/build/other_builds/kivy
+          # Ștergem absolut tot cache-ul anterior pentru un build "curat"
+          rm -rf .buildozer
+          # Rulăm build-ul
           buildozer --verbose android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
