@@ -26,27 +26,33 @@ class YTDownloader(App):
 ...         return self.layout
 ... 
 ...     def download_music(self, instance):
-...         url = self.url_input.text
-...         if not url:
-...             self.label.text = "Te rog introdu un URL!"
-...             return
-... 
-...         # Folderul de descarcare pe Android (cale specifica)
-...         download_path = '/storage/emulated/0/Download/%(title)s.%(ext)s'
-...         
-...         ydl_opts = {
-            'format': 'bestaudio[ext=m4a]/bestaudio/best', # Caută m4a mai întâi
+        url = self.url_input.text.strip() # Am corectat aici
+        if not url:
+            self.label.text = "Eroare: Introdu un URL!"
+            return
+
+        if platform == 'android':
+            from android.permissions import request_permissions, Permission
+            request_permissions([Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE])
+            path = '/storage/emulated/0/Download/%(title)s.%(ext)s'
+        else:
+            path = '%(title)s.%(ext)s'
+
+        self.label.text = "Descărcare începută..."
+        
+        ydl_opts = {
+            'format': 'bestaudio[ext=m4a]/bestaudio/best', # Descarcă formatul cel mai bun fără conversie
             'outtmpl': path,
-            # Am scos postprocessors (care cereau ffmpeg)
         }
-... 
-...         try:
-...             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-...                 ydl.download([url])
-...             self.label.text = "Descărcare reușită în folderul Downloads!"
-...         except Exception as e:
-...             self.label.text = f"Eroare: {str(e)}"
+
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+            self.label.text = "GATA! Verifică folderul Downloads."
+        except Exception as e:
+            self.label.text = f"Eroare: {str(e)}"
 ... 
 ... if __name__ == '__main__':
+
 
 
