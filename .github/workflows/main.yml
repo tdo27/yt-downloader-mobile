@@ -5,11 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Build with Buildozer
         uses: ArtemSBulgakov/buildozer-action@v1
         with:
           command: buildozer android debug
           buildozer_version: master
+          # Aceasta este linia care repara eroarea din screenshot-ul tau:
+          user: root
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
