@@ -23,7 +23,8 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Rulăm cu --verbose pentru a menține conexiunea activă prin log-uri constante
+          # Ștergem cache-ul specific p4a care poate cauza erori de compilare Kivy
+          rm -rf .buildozer/android/platform/build-armeabi-v7a_arm64-v8a/build/other_builds/kivy
           buildozer --verbose android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
