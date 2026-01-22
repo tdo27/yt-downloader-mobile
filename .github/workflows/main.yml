@@ -16,13 +16,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pip build-essential git autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
+          # Cython 0.29.33 este cea mai stabila versiune pentru Kivy pe Android
           pip3 install --user --upgrade "Cython<3.0" virtualenv "buildozer==1.5.0" --break-system-packages
 
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Ștergem absolut tot cache-ul anterior pentru un build "curat"
+          # Curățare agresivă a resturilor care blochează Kivy
           rm -rf .buildozer
           # Rulăm build-ul
           buildozer --verbose android debug
