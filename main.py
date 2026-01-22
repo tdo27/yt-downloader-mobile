@@ -35,14 +35,10 @@ class YTDownloader(App):
 ...         download_path = '/storage/emulated/0/Download/%(title)s.%(ext)s'
 ...         
 ...         ydl_opts = {
-...             'format': 'bestaudio/best',
-...             'outtmpl': download_path,
-...             'postprocessors': [{
-...                 'key': 'FFmpegExtractAudio',
-...                 'preferredcodec': 'mp3',
-...                 'preferredquality': '192',
-...             }],
-...         }
+            'format': 'bestaudio[ext=m4a]/bestaudio/best', # Caută m4a mai întâi
+            'outtmpl': path,
+            # Am scos postprocessors (care cereau ffmpeg)
+        }
 ... 
 ...         try:
 ...             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -52,4 +48,5 @@ class YTDownloader(App):
 ...             self.label.text = f"Eroare: {str(e)}"
 ... 
 ... if __name__ == '__main__':
+
 
