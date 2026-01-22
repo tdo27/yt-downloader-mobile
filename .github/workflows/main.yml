@@ -2,31 +2,27 @@ name: Build APK
 on: push
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04  # Versiune mai stabila pentru Python/Buildozer
     steps:
       - uses: actions/checkout@v4
 
-      - name: Free Disk Space (Aggressive)
+      - name: Free Disk Space
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf /usr/local/openjdk*
-          sudo rm -rf /usr/local/share/powershell
-          sudo rm -rf /var/lib/mongodb
-          sudo docker image prune -a -f
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip build-essential git python3 autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
-          sudo pip3 install --upgrade pip
-          sudo pip3 install --upgrade "Cython<3.0" virtualenv buildozer --break-system-packages
+          sudo apt install -y python3-pip build-essential git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
+          # Instalam Buildozer 1.5.0 (cea mai stabila varianta pentru GitHub)
+          pip3 install --user --upgrade "Cython<3.0" virtualenv "buildozer==1.5.0" --break-system-packages
 
       - name: Build APK
         run: |
-          # Stergem orice folder temporar vechi care ocupa spatiu
+          export PATH=$PATH:~/.local/bin
+          # Important: curatam tot inainte de build pentru a evita eroarea de 'Context'
           rm -rf .buildozer
           buildozer android debug
         env:
