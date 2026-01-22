@@ -2,22 +2,23 @@ name: Build APK
 on: push
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Folosim o versiune fixa de Ubuntu
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-          pip3 install --user --upgrade buildozer
+          sudo apt install -y python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
+          pip3 install --user --upgrade buildozer cython==0.29.33
 
       - name: Build APK
         run: |
-          # Rulam buildozer direct, fara "action" intermediar care sa dea erori de user
-          buildozer android debug
+          # Verificam unde suntem si ce fisiere vedem (pentru siguranta)
+          ls -la
+          # Rulam buildozer
+          ~/.local/bin/buildozer android debug
         env:
-          # Acceptam licentele automat
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
 
       - name: Upload APK
