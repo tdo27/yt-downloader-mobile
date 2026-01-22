@@ -6,22 +6,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Free Disk Space
+      - name: Free Disk Space (Aggressive)
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/local/openjdk*
+          sudo rm -rf /usr/local/share/powershell
+          sudo rm -rf /var/lib/mongodb
+          sudo docker image prune -a -f
 
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip build-essential git python3 autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
+          sudo pip3 install --upgrade pip
           sudo pip3 install --upgrade "Cython<3.0" virtualenv buildozer --break-system-packages
 
       - name: Build APK
         run: |
-          # Curățăm complet orice tentativă eșuată anterioară
-          buildozer android clean
+          # Stergem orice folder temporar vechi care ocupa spatiu
+          rm -rf .buildozer
           buildozer android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
