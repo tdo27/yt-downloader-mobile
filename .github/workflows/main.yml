@@ -11,11 +11,5 @@ jobs:
         with:
           command: buildozer android debug
           buildozer_version: master
-          # Aceasta este linia care repara eroarea din screenshot-ul tau:
-          user: root
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: bin/*.apk
+        env:
+          USER: root  # Forțăm variabila de mediu direct aici
