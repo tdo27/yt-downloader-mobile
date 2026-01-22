@@ -2,22 +2,22 @@ name: Build APK
 on: push
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
-          # Instalăm virtualenv și cython (obligatorii pentru buildozer)
+          sudo apt install -y python3-pip build-essential git python3 autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
+          # Instalăm pachetele Python necesare
+          sudo pip3 install --upgrade pip
           sudo pip3 install --upgrade "Cython<3.0" virtualenv buildozer --break-system-packages
 
       - name: Build APK
         run: |
-          # Ștergem orice resturi de la build-uri eșuate pentru a evita conflictele de permisiuni
+          # Ștergem resturile și forțăm build-ul
           rm -rf .buildozer
-          # Rulăm buildozer
           buildozer android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
