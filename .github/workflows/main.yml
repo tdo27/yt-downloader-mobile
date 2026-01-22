@@ -10,12 +10,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
-          # Instalăm Buildozer și Cython la nivel de sistem (sudo) pentru a fi vizibile global
-          sudo pip3 install --upgrade "Cython<3.0" buildozer --break-system-packages
+          # Instalăm virtualenv și cython (obligatorii pentru buildozer)
+          sudo pip3 install --upgrade "Cython<3.0" virtualenv buildozer --break-system-packages
 
       - name: Build APK
         run: |
-          # Acum comanda 'buildozer' va fi recunoscută direct
+          # Ștergem orice resturi de la build-uri eșuate pentru a evita conflictele de permisiuni
+          rm -rf .buildozer
+          # Rulăm buildozer
           buildozer android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
