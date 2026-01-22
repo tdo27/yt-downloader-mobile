@@ -8,4 +8,5 @@ version = 0.1
 requirements = python3,kivy,yt-dlp,ffmpeg
 orientation = portrait
 permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+
 android.archs = arm64-v8a
