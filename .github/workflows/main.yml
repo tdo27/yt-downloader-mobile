@@ -2,7 +2,7 @@ name: Build APK
 on: push
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Versiune mai stabila pentru Python/Buildozer
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -15,14 +15,14 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip build-essential git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk
-          # Instalam Buildozer 1.5.0 (cea mai stabila varianta pentru GitHub)
+          # Am adaugat autoconf, automake si libltdl-dev explicit
+          sudo apt install -y python3-pip build-essential git autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
           pip3 install --user --upgrade "Cython<3.0" virtualenv "buildozer==1.5.0" --break-system-packages
 
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
-          # Important: curatam tot inainte de build pentru a evita eroarea de 'Context'
+          # Stergem cache-ul vechi care a retinut eroarea de autoconf
           rm -rf .buildozer
           buildozer android debug
         env:
