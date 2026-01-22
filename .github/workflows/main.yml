@@ -16,15 +16,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y python3-pip build-essential git autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
-          # Folosim Cython 3.0.0 care este necesar pentru Kivy Master
-          pip3 install --user --upgrade "Cython>=3.0.0" virtualenv "buildozer==1.5.0" --break-system-packages
+          pip3 install --user --upgrade virtualenv "buildozer==1.5.0" "Cython<3.0" --break-system-packages
 
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          rm -rf .buildozer
-          # Rulăm build-ul
+          # Nu mai ștergem .buildozer acum, lăsăm cache-ul să ajute
           buildozer --verbose android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
