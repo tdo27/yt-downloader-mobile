@@ -27,13 +27,14 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Curățăm doar folderele de build, nu ștergem executabilul buildozer!
+          # Curățăm doar resturile de build, nu și comanda buildozer
           rm -rf .buildozer/android/platform/build-*
-          # Pornim buildozer pe o linie nouă
+          
+          # IMPORTANT: Buildozer trebuie să fie pe linie separată
           buildozer --verbose android debug
-          # Verificăm ce a ieșit
-          echo "Conținutul folderului bin este:"
-          ls -la bin/
+          
+          # Verificăm dacă APK-ul a fost creat
+          ls -R bin/
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
 
