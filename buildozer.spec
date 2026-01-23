@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # REQUIREMENTS (Am adaugat cython aici)
-requirements = python3,kivy==master,yt-dlp,cython,setuptools
+requirements = python3,kivy==master,yt-dlp,cython
 
 orientation = portrait
 permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
@@ -26,4 +26,5 @@ log_level = 2
 
 [buildozer]
 bin_dir = ./bin
+
 
