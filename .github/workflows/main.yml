@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extreme Disk Cleanup
+      - name: Extreme Free Space
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
@@ -14,8 +14,7 @@ jobs:
           sudo rm -rf "/usr/local/share/boost"
           sudo rm -rf /usr/lib/jvm
           sudo docker image prune -a -f
-          sudo apt-get clean
-          df -h # Afișează spațiul liber în log pentru verificare
+          df -h
 
       - name: Install dependencies
         run: |
@@ -27,13 +26,12 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Curățăm doar resturile de build, nu și comanda buildozer
+          # Curățăm doar folderele de build grele, nu și SDK/NDK-ul descărcat
           rm -rf .buildozer/android/platform/build-*
           
-          # IMPORTANT: Buildozer trebuie să fie pe linie separată
           buildozer --verbose android debug
           
-          # Verificăm dacă APK-ul a fost creat
+          echo "Verificare folder bin:"
           ls -R bin/
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
@@ -41,6 +39,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: my-downloader-apk
+          name: package
           path: bin/*.apk
-          if-no-files-found: error
