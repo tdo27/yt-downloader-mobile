@@ -7,7 +7,7 @@ source.include_exts = py,png,jpg,kv,atlas
 version = 0.1
 
 # REQUIREMENTS (Am adaugat cython aici)
-requirements = python3,kivy==master,yt-dlp,cython
+requirements = python3,kivy==master,yt-dlp,cython,setuptools
 
 orientation = portrait
 permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
