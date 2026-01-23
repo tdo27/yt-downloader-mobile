@@ -27,13 +27,16 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Ștergem folderele de build vechi care ocupă spațiu, dar păstrăm SDK/NDK
+          # Curățăm doar folderele de build grele, nu și SDK/NDK
           rm -rf .buildozer/android/platform/build-* buildozer --verbose android debug
+          # Verificăm unde este APK-ul ca să fim siguri
+          ls -R bin/
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: package
+          name: my-downloader-apk
           path: bin/*.apk
+          if-no-files-found: error
