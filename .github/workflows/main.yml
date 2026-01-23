@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extreme Free Space
+      - name: Maximize Disk Space
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
@@ -14,6 +14,10 @@ jobs:
           sudo rm -rf "/usr/local/share/boost"
           sudo rm -rf /usr/lib/jvm
           sudo docker image prune -a -f
+          sudo apt-get clean
+          # Ștergem și fișierele mari de log sau swap nefolosite
+          sudo rm -rf /var/lib/mongodb
+          sudo rm -rf /usr/local/share/powershell
           df -h
 
       - name: Install dependencies
@@ -26,13 +30,10 @@ jobs:
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Curățăm doar folderele de build grele, nu și SDK/NDK-ul descărcat
+          # Curățăm doar folderele de compilare anterioare, păstrăm SDK/NDK descărcat
           rm -rf .buildozer/android/platform/build-*
           
           buildozer --verbose android debug
-          
-          echo "Verificare folder bin:"
-          ls -R bin/
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
 
