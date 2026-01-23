@@ -6,25 +6,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Free Disk Space
+      - name: Extreme Disk Cleanup
         run: |
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf /usr/lib/jvm
+          sudo docker image prune -a -f
+          sudo apt-get clean
+          df -h # Afișează spațiul liber în log pentru verificare
 
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y python3-pip build-essential git autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
-          # Adăugăm wheel și setuptools aici
           pip3 install --user --upgrade virtualenv "buildozer==1.5.0" "Cython<3.0" setuptools wheel --break-system-packages
 
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # De data aceasta NU mai ștergem tot, pentru a folosi NDK-ul deja descărcat anterior (economisim timp)
-          buildozer --verbose android debug
+          # Ștergem folderele de build vechi care ocupă spațiu, dar păstrăm SDK/NDK
+          rm -rf .buildozer/android/platform/build-* buildozer --verbose android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
 
