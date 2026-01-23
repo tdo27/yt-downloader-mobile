@@ -6,32 +6,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Maximize Free Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf "/usr/local/share/boost"
-          sudo rm -rf /usr/lib/jvm
-          sudo rm -rf /var/lib/mongodb
-          sudo rm -rf /usr/local/share/powershell
-          sudo docker image prune -a -f
-          sudo apt-get clean
-          df -h # Afișăm spațiul liber să fim siguri că avem ~40GB
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip build-essential git autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
+          sudo apt install -y python3-pip build-essential git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev openjdk-17-jdk libltdl-dev
           pip3 install --user --upgrade virtualenv "buildozer==1.5.0" "Cython<3.0" setuptools wheel --break-system-packages
 
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
           sudo chown -R $USER:$USER .
-          # Ștergem resturile de la build-ul eșuat de data trecută
+          # Curățăm doar resturile de build, păstrăm SDK/NDK
           rm -rf .buildozer/android/platform/build-*
-          
           buildozer --verbose android debug
         env:
           APP_ANDROID_ACCEPT_SDK_LICENSE: "1"
@@ -39,5 +36,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: yt-downloader-apk
+          name: package
           path: bin/*.apk
